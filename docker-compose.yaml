@@ -1,0 +1,86 @@
+version: '3'
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    # networks: 
+    #   - broker-kafka
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - zookeeper
+    ports:
+      - 9092:9092
+      - 29092:29092
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  kafdrop:
+    image: obsidiandynamics/kafdrop:latest
+    depends_on:
+      - kafka
+    ports:
+      - 19000:9000
+    environment:
+      KAFKA_BROKERCONNECT: kafka:29092
+
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    ports:
+      - "27017:27017"
+
+  food-ordering-backend:
+    build:
+      context: ./food-ordering-backend/
+      dockerfile: Dockerfile
+    container_name: food-ordering-backend
+    ports:
+      - "3000:3000"
+      - "9222:9222"
+    command: yarn start
+    volumes:
+      - ./food-ordering-backend:/food-ordering-backend
+
+  food-ordering-transactions-backend:
+    build:
+      context: ./food-ordering-transactions-backend/
+      dockerfile: Dockerfile
+    container_name: food-ordering-transactions-backend
+    ports:
+      - "3001:3001"
+      - "9223:9223"
+    command: yarn start
+    volumes:
+      - ./food-ordering-transactions-backend:/food-ordering-transactions-backend
+
+  analytics-backend:
+    build:
+      context: ./analytics-backend/
+      dockerfile: Dockerfile
+    container_name: analytics-backend
+    ports:
+      - "9224:9224"
+    command: yarn start
+    volumes:
+      - ./analytics-backend:/analytics-backend
+
+  event-generator:
+    build:
+      context: ./event-generator/
+      dockerfile: Dockerfile
+    container_name: event-generator
+    command: python app.py
+    volumes:
+      - ./event-generator:/event-generator

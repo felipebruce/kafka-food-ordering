@@ -1,0 +1,21 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "attach",
+            "name": "Food Ordering Backend",
+            "remoteRoot": "/food-ordering-backend/",
+            "localRoot": "${workspaceFolder}/food-ordering-backend",
+            "port": 9222
+        },
+        {
+            "type": "node",
+            "request": "attach",
+            "name": "Food Ordering Transaction Backend",
+            "remoteRoot": "/food-ordering-transactions-backend/",
+            "localRoot": "${workspaceFolder}/food-ordering-transactions-backend",
+            "port": 9223
+        }
+    ]
+}

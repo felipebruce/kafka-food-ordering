@@ -1,0 +1,30 @@
+<div class="main-content">
+  <div class="navbar">
+
+  </div>
+  <div class="menu-content">
+    <div class="menu-title">
+      Kafka menu order
+    </div>
+    <section class="menu-items-section">
+      <div class="menu-item" *ngFor="let menuItem of menuItemsList">
+        <div class="item-icon">
+          <img src="{{menuItem.iconPath}}" alt="">
+        </div>
+        <span class="menu-item-name">{{ menuItem.name }}</span>
+        <span>${{ menuItem.price }}</span>
+        <section class="item-quantity-section">
+          <span class="quantity-title">Quantity:</span>
+          <input type="number" readonly="readonly" class="num" value="0" [(ngModel)]="menuItem.quantity" />
+          <div class="button-div">
+            <button mat-mini-fab (click)="handleMinus(menuItem)">-</button>
+            <button mat-mini-fab (click)="handlePlus(menuItem)">+</button>
+          </div>
+        </section>
+      </div>
+      <section class="make-order-section">
+        <button mat-stroked-button (click)="onOrderAction()">Order now!</button>
+      </section>
+    </section>
+  </div>
+</div>

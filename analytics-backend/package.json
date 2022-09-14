@@ -1,0 +1,15 @@
+{
+  "name": "analytics-backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "nodemon -L --inspect=0.0.0.0:9224 app.js"
+  },
+  "dependencies": {
+    "kafkajs": "^2.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.19"
+  }
+}
